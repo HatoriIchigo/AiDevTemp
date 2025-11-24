@@ -51,21 +51,26 @@ Claude: セキュリティも重要だから2要素認証も実装しました�
 - セッション管理の要件はありますか？
 - 既存の認証gemの使用は可能ですか？```
 
+---
+
 ## プロジェクトルートCLAUDE.mdの構成
 各プロジェクトルートのCLAUDE.mdは以下構成とする。
 
 1. プロジェクトの概要
 2. システム構成図
 3. 機能一覧
-4. 技術スタック
-5. 使用するコマンド
-6. ディレクトリ構成
-7. メインコード実装方針
-8. 単体テストコード実装方針
-9. 結合・統合テスト実装方針
-10. その他プロジェクトに関する必要事項
-11. 注意事項
-12. 参照ドキュメント
+4. 画面一覧
+5. 技術スタック
+6. 使用するコマンド
+7. ディレクトリ構成
+8. メインコード実装方針
+9. 単体テストコード実装方針
+10. 結合・統合テスト実装方針
+11. その他プロジェクトに関する必要事項
+12. 注意事項
+13. 参照ドキュメント
+
+---
 
 ## ディレクトリ構成
 各プロジェクトルートのディレクトリ構成は以下とする。
@@ -83,59 +88,37 @@ project-root/
   |   |- requirements.txt
   |   ∟ README.md
   |- docs/: ドキュメント関連
-  ∟ src/
-    |- main
-    |- test
+  |   |- requirements.md:  要件定義書
+  |   |- design.md: 設計書
+  |   |- database.md: DB仕様書
+  |   |- screen.md: 画面仕様書
+  |   |- external/: 外部接続IF仕様書
+  |   |   |- systemA.yaml: システムAの外部接続IF仕様書
+  |   |   |- systemB.yaml: システムBの外部接続IF仕様書 
+  |   |- ifspec.yaml: backend用IF仕様書
+  |   |- note/: その他ドキュメントファイルを格納
+  |- backend: バックエンドアプリケーション
+  |   |- src
+  |   |- test
+  |- frontend: フロントエンドアプリケーション
+  |   |- src
+  |   |- test
+  |- poc: 試作
+  |   |- backend
+  |   |- frontend
+  |- .tmp/: 一時ディレクトリ
+  |- .context/: コンテキストエンジニアリング用ディレクトリ
+      |- context_202511162154.md
 ```
+
+---
 
 ## 外部接続モックプログラム
 
 ### 概要
 Python+FastAPIを利用した外部接続をモックするプログラム。
 
-## コード実装上の注意
-
-### Exception関連
-
-指定のない限りExceptionは別途フォルダ及びファイルを作成すること。
-実装コードと同一のファイル（Ex. src/main/accounts/Login.pyなど）にExceptionクラスを作成しない。
-
-Ex. src/main/exceptions/ValidationException.py
-```python
-class ValidationException(Exception):
-    pass
+### 起動方法
+```bash
+cd .external && ./venv/bin/python3 -m uvicorn src.main:app --host 0.0.0.0 --port 9100 --reload
 ```
-
-### Validation関連
-
-指定のない限りValidationは別途フォルダおよびファイルを作成すること。
-同一機能のValidationは一つのファイルにまとめる。
-また、Validation失敗時にはExceptionとして投げる。
-
-Ex. src/main/validation/UserValidation.py
-```python
-# Validation定義
-class UserValidation:
-    def UsernameValidation(username: str, required: str):
-        # required
-        if (required is False): return 0
-        elif (type(username) is not str): raise ValidationException
-        elif (username == ""): raise ValidationException
-        return 0
-```
-
-使用側：
-```python
-try:
-    username = request.getUsername()
-
-    userValidation = UserValidation()
-    userValidation.UsernameValidation(username)
-
-    # ビジネスロジック
-except:
-    # エラー時の挙動
-```
-
-### ログ関連
-- `print`や`System.out.println`などの標準出力を禁止。`logging`や`log4j`を用いた出力。
