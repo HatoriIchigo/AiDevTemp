@@ -1,14 +1,6 @@
 ---
-mode: "agent"
-model: "GPT-4o"
-tool: [
-        "get_changed_files",
-        "read_file",
-        "semantic_search",
-        "run_in_terminal",
-        "insert_edit_into_file",
-    ]
-description: "コンテキストファイル（実装）の批判的レビュー"
+agent: 'agent'
+description: 'コンテキストレビューを行う'
 ---
 
 ## 目的

@@ -1,13 +1,5 @@
 ---
-mode: "agent"
-model: "GPT-4o"
-tool: [
-        "get_changed_files",
-        "read_file",
-        "semantic_search",
-        "run_in_terminal",
-        "insert_edit_into_file",
-    ]
+agent: 'agent'
 description: "単体テストの実装"
 ---
 # 単体テストの自動生成
