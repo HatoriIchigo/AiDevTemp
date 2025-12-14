@@ -1,6 +1,10 @@
 import os
 import json
 
+AGENTS = "agents"
+COMMANDS = "commands"
+SKILLS = "skills"
+
 ###############################################################
 #
 #                 ディレクトリが無ければ作成
@@ -30,7 +34,7 @@ if not os.path.exists(".gemini/commands"):
 # Claude用コピー
 def copy_to_claude(filepath, type, header):
     try:
-        if type == "agent":
+        if type == AGENTS:
             src = os.path.join(".ai", "agents", filepath)
             dst = os.path.join(".claude", "agents", filepath)
             with open(src, "r", encoding="utf-8") as f:
@@ -46,7 +50,7 @@ def copy_to_claude(filepath, type, header):
                     f.write(f"color: {header['color']}\n")
                 f.write("---\n\n")
                 f.write(content)
-        elif type == "command":
+        elif type == COMMANDS:
             fpath = filepath.split("/")
             src = os.path.join(".ai", "commands", *fpath)
             dst = os.path.join(".claude", "commands", *fpath)
@@ -62,7 +66,7 @@ def copy_to_claude(filepath, type, header):
 # Copilot用コピー
 def copy_to_copilot(filepath, type, header):
     try:
-        if type == "agent":
+        if type == AGENTS:
             src = os.path.join(".ai", "agents", filepath)
             dst = os.path.join(".github", "agents", filepath.replace(".md", ".agent.md"))
             with open(src, "r", encoding="utf-8") as f:
@@ -73,7 +77,7 @@ def copy_to_copilot(filepath, type, header):
                 f.write(f"description: {header['description']}\n")
                 f.write("---\n\n")
                 f.write(content)
-        elif type == "command":
+        elif type == COMMANDS:
             fpath = filepath.split("/")
             src = os.path.join(".ai", "commands", *fpath)
             dst = os.path.join(".github", "prompts", filepath.replace("/", "__").replace(".md", ".prompt.md"))
@@ -93,7 +97,7 @@ def copy_to_copilot(filepath, type, header):
 # Gemini用コピー
 def copy_to_gemini(filepath, type, header):
     try:
-        if type == "command":
+        if type == COMMANDS:
             fpath = filepath.split("/")
             src = os.path.join(".ai", "commands", *fpath)
             dst = os.path.join(".gemini", "commands", *fpath).replace(".md", ".toml")
@@ -128,23 +132,18 @@ with open(os.path.join("GEMINI.md"), "w", encoding="utf-8") as f:
 # その他ファイルコピー
 with open(os.path.join(".ai", "copy-info.json"), "r", encoding="utf-8") as f:
     copy_info = json.load(f)
+model = copy_info["model"]
 
-agents = copy_info["agents"]
-for filename, model in agents.items():
-    if "claude" in model:
-        copy_to_claude(filename, "agent", model["claude"]["header"])
-    if "copilot" in model:
-        copy_to_copilot(filename, "agent", model["copilot"]["header"])
-    print(f"Copied agent: {filename}")
+for tp, data in copy_info.items():
+    if tp in ["agents", "commands", "skills"]:
+        for filename, model in data.items():
+            if "claude" in model:
+                copy_to_claude(filename, tp, model["claude"].get("header", {}))
+            if "copilot" in model:
+                copy_to_copilot(filename, tp, model["claude"].get("header", {}))
+            if "gemini" in model:
+                copy_to_gemini(filename, tp, model["claude"].get("header", {}))
+            print(f"Copied {tp}: {filename}")
 
-commands = copy_info["commands"]
-for filename, model in commands.items():
-    if "claude" in model:
-        copy_to_claude(filename, "command", None)
-    if "copilot" in model:
-        copy_to_copilot(filename, "command", model["copilot"]["header"])
-    if "gemini" in model:
-        copy_to_gemini(filename, "command", model["gemini"]["header"])
-    print(f"Copied command: {filename}")
 
 

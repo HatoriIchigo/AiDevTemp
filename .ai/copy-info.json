@@ -1,4 +1,5 @@
 {
+    "model": ["claude", "copilot", "gemini"],
     "agents": {
         "code-explorer.md": {
             "claude": {
@@ -300,6 +301,11 @@
                     "description": "問題の原因の探索及び解決策を複数案提示する。"
                 }
             }
+        }
+    },
+    "skills": {
+        "git-branch-strategy": {
+            "claude": {}
         }
     }
 }
