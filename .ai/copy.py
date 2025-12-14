@@ -5,6 +5,11 @@ AGENTS = "agents"
 COMMANDS = "commands"
 SKILLS = "skills"
 
+# AGENTS.md保存先
+CLAUDE_AGENTS_MD = os.path.join(os.getcwd(), "CLAUDE.md")
+COPILOT_AGENTS_MD = os.path.join(os.getcwd(), ".github", "copilot-instructions.md")
+GEMINI_AGENTS_MD = os.path.join(os.getcwd(), "GEMINI.md")
+
 ###############################################################
 #
 #                 ディレクトリが無ければ作成
@@ -123,9 +128,11 @@ def copy_to_gemini(filepath, type, header):
 with open(os.path.join(".ai", "AGENTS.md"), "r", encoding="utf-8") as f:
     content = f.read()
 
-with open(os.path.join("CLAUDE.md"), "w", encoding="utf-8") as f:
+with open(CLAUDE_AGENTS_MD, "w", encoding="utf-8") as f:
     f.write(content)
-with open(os.path.join("GEMINI.md"), "w", encoding="utf-8") as f:
+with open(GEMINI_AGENTS_MD, "w", encoding="utf-8") as f:
+    f.write(content)
+with open(COPILOT_AGENTS_MD, "w", encoding="utf-8") as f:
     f.write(content)
 
 
