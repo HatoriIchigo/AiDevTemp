@@ -307,5 +307,14 @@
         "git-branch-strategy": {
             "claude": {}
         }
+    },
+    "rules": {
+        "context.md": {
+            "claude": {
+                "header": {
+                    "path": ".context/*.md"
+                }
+            }
+        }
     }
 }

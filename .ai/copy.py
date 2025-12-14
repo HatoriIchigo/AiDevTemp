@@ -4,6 +4,7 @@ import json
 AGENTS = "agents"
 COMMANDS = "commands"
 SKILLS = "skills"
+RULES = "rules"
 
 # AGENTS.md保存先
 CLAUDE_AGENTS_MD = os.path.join(os.getcwd(), "CLAUDE.md")
@@ -65,8 +66,20 @@ def copy_to_claude(filepath, type, header):
                 os.makedirs(os.path.dirname(dst))
             with open(dst, "w", encoding="utf-8") as f:
                 f.write(content)
+        elif type == RULES:
+            src = os.path.join(".ai", "rules", filepath)
+            dst = os.path.join(".claude", "rules", filepath)
+            with open(src, "r", encoding="utf-8") as f:
+                content = f.read()
+            if not os.path.exists(os.path.dirname(dst)):
+                os.makedirs(os.path.dirname(dst))
+            with open(dst, "w", encoding="utf-8") as f:
+                f.write("---\n")
+                f.write(f"path: {header['path']}\n")
+                f.write("---\n\n")
+                f.write(content)
     except Exception as e:
-        print(f"Error copying to Claude: {e}")
+        print(e)
 
 # Copilot用コピー
 def copy_to_copilot(filepath, type, header):
@@ -97,7 +110,7 @@ def copy_to_copilot(filepath, type, header):
                 f.write("---\n\n")
                 f.write(content)
     except Exception as e:
-        print(f"Error copying to Copilot: {e}")
+        print(e)
 
 # Gemini用コピー
 def copy_to_gemini(filepath, type, header):
@@ -116,7 +129,7 @@ def copy_to_gemini(filepath, type, header):
                 f.write(content)
                 f.write("\"\"\"\n")
     except Exception as e:
-        print(f"Error copying to Gemini: {e}")
+        print(e)
 
 ###############################################################
 #
@@ -142,14 +155,14 @@ with open(os.path.join(".ai", "copy-info.json"), "r", encoding="utf-8") as f:
 model = copy_info["model"]
 
 for tp, data in copy_info.items():
-    if tp in ["agents", "commands", "skills"]:
+    if tp in ["agents", "commands", "skills", "rules"]:
         for filename, model in data.items():
             if "claude" in model:
                 copy_to_claude(filename, tp, model["claude"].get("header", {}))
             if "copilot" in model:
-                copy_to_copilot(filename, tp, model["claude"].get("header", {}))
+                copy_to_copilot(filename, tp, model["copilot"].get("header", {}))
             if "gemini" in model:
-                copy_to_gemini(filename, tp, model["claude"].get("header", {}))
+                copy_to_gemini(filename, tp, model["gemini"].get("header", {}))
             print(f"Copied {tp}: {filename}")
 
 
