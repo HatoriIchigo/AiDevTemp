@@ -44,7 +44,7 @@
 
 #### 禁止行為チェックリスト
 - [ ] 要求されていない機能の追加
-- [ ] 勝手なリファクタリング  
+- [ ] 勝手なリファクタリング
 - [ ] 推測に基づく実装
 - [ ] 「ついでに」の作業
 - [ ] 親切心からの拡大解釈
@@ -98,9 +98,10 @@ project-root/
   |   |- design.md: 設計書
   |   |- database.md: DB仕様書
   |   |- screen.md: 画面仕様書
+  |   |- performance.md: 性能要件
   |   |- external/: 外部接続IF仕様書
   |   |   |- systemA.yaml: システムAの外部接続IF仕様書
-  |   |   |- systemB.yaml: システムBの外部接続IF仕様書 
+  |   |   |- systemB.yaml: システムBの外部接続IF仕様書
   |   |- ifspec.yaml: backend用IF仕様書
   |   |- note/: その他ドキュメントファイルを格納
   |- backend: バックエンドアプリケーション
