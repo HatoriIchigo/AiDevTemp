@@ -1,3 +1,8 @@
+---
+agent: 'agent'
+description: '指定されたコンテキストからコードレビューを実行する。'
+---
+
 # Code Reviewer Command
 
 ## 概要
